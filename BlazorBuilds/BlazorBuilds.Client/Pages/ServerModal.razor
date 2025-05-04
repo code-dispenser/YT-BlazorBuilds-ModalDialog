@@ -35,7 +35,6 @@
 
     public async Task ShowDialog()
     {
-        await InvokeAsync(StateHasChanged);
 
         SomePersonData somePersonData = new() { FirstName="John", Surname="Doe", Age=42, Country="United Kingdom" };
 
@@ -49,7 +48,6 @@
         (dialogResult.ButtonClicked == DialogResultButtons.Ok).WhenTrueElse(act_whenTrue: () => _outputMessage = "The data returned was:" + dialogResult.Data.ToString(),
                                                                             act_whenFalse:() => _outputMessage = "The operation was cancelled.");
 
-        await Task.Yield();
         await ButtonRef.FocusAsync();
     }
 
