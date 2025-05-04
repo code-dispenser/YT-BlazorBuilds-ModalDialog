@@ -1,0 +1,59 @@
+﻿@inject ModalDialogService _dialogService //< < < Service is required.
+@page "/ServerModal"
+
+@rendermode InteractiveServer
+
+<ModalDialogContainer />  <!-- < < < For Interactive global projects you should put the ModalDialogContainer in the Routes component instead, see comments in Routes for guidance -->
+
+<h3>Modal Dialog On the Server</h3>
+
+<p><b>Code is running on the: @_location</b></p>
+
+<p>
+    You can pass in as many parameters that have been defined on the (dialog) component that you want displayed in the dialog framework window.
+</p>
+<p>
+    For the demo just passing in a SomePersonData object to a pretend form.
+</p>
+<p>
+    Dialog options allow to set the vertical alignment to top, centre or bottom and the horizontal alignment to left centre or right.
+</p>
+<p>
+    This dialog is set to open top centre
+</p>
+
+<button @ref="ButtonRef" class="btn btn-primary mt-3" @onclick="ShowDialog">Show Dialog</button>
+
+<p class="mt-4">@_outputMessage</p>
+
+@code {
+
+    private ElementReference ButtonRef { get; set; }
+
+    private string _outputMessage = String.Empty;
+    private string _location      = String.Empty;
+
+    public async Task ShowDialog()
+    {
+        await InvokeAsync(StateHasChanged);
+
+        SomePersonData somePersonData = new() { FirstName="John", Surname="Doe", Age=42, Country="United Kingdom" };
+
+        var dialogOptions    = new ModalDialogOptions(HorizontalAlignment.Centre, VerticalAlignment.Top);
+        var dialogParameters = new ModalDialogParameters<SomeForm>();
+
+        dialogParameters.Add(x => x.SomePersonData, somePersonData);
+
+        var dialogResult = await _dialogService.ShowDialog<SomeForm>(dialogParameters, dialogOptions);
+
+        (dialogResult.ButtonClicked == DialogResultButtons.Ok).WhenTrueElse(act_whenTrue: () => _outputMessage = "The data returned was:" + dialogResult.Data.ToString(),
+                                                                            act_whenFalse:() => _outputMessage = "The operation was cancelled.");
+
+        await Task.Yield();
+        await ButtonRef.FocusAsync();
+    }
+
+    protected override void OnInitialized()
+
+        => _location = OperatingSystem.IsBrowser() ? "Client" : "Server";
+}

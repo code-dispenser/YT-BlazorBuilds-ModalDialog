@@ -1,0 +1,55 @@
+﻿
+@inject ModalDialogService _dialogService
+
+<div class="dialog" @onkeydown="async (args) => await HandleKeyDown(args)"><!-- Important add a key down handler for the escape key -->
+
+    <div class="dialog__header dialog__header--warning">
+        <span class="dialog__icon dialog__icon--warning warning-triangle-icon"
+        aria-hidden="true"></span>
+        <h3 id="@_dialogTitleID">@_title</h3>
+    </div>
+
+    <div class="dialog__body">
+        @((MarkupString)_dialogMessage)<!--in case you want to use a string with markup in it-->
+    </div>
+
+    <div class="dialog__footer">
+        <button class="button button--success" @onclick="async () => await HandleCloseDialog(false)">@_buttonYesText</button>
+        <button class="button button--warning" @onclick="async () => await HandleCloseDialog(true)">@_buttonNoText</button>
+    </div>
+
+</div>
+@code {
+    [Parameter] public string DialogTitle   { get; set; } = default!;
+    [Parameter] public string DialogMessage { get; set; } = default!; 
+    [Parameter] public string ButtonYesText { get; set; } = default!;
+    [Parameter] public string ButtonNoText  { get; set; } = default!;
+
+    private string _title         = GlobalValues.Confirmation_Dialog_Title;
+    private string _buttonYesText = GlobalValues.Confirmation_Dialog_Yes_Text;
+    private string _buttonNoText  = GlobalValues.Confirmation_Dialog_No_Text;
+    private string _dialogTitleID = Guid.Empty.ToString();
+
+    private string _dialogMessage = GlobalValues.Confirmation_Dialog_Message;
+
+    protected override void OnInitialized()
+    {
+        _title          = String.IsNullOrWhiteSpace(DialogTitle)   ? GlobalValues.Confirmation_Dialog_Title    : DialogTitle.Trim();
+        _buttonYesText  = String.IsNullOrWhiteSpace(ButtonYesText) ? GlobalValues.Confirmation_Dialog_Yes_Text : ButtonYesText.Trim();
+        _buttonNoText   = String.IsNullOrWhiteSpace(ButtonNoText)  ? GlobalValues.Confirmation_Dialog_No_Text  : ButtonNoText.Trim();
+        _dialogMessage  = String.IsNullOrWhiteSpace(DialogMessage) ? GlobalValues.Confirmation_Dialog_Message  : DialogMessage.Trim();
+       
+        _dialogTitleID       = _dialogService is null ? _dialogTitleID : _dialogService.GetAriaLabelledByID();
+    }
+
+
+    public async Task HandleCloseDialog(bool cancelled = false)
+    
+        => await cancelled.WhenTrueElse(() => _dialogService.CloseDialog(ModalDialogResult.Cancel()), () => _dialogService.CloseDialog(ModalDialogResult.OK()));
+    
+
+    public async Task HandleKeyDown(KeyboardEventArgs keyArgs)// You only need to check for the escape key, in this instance just forwarding it for the dialog to close with the cancelled result.
+    
+        => await (keyArgs.Key == GlobalValues.KeyBoard_Escape_Key).WhenTrue(() => HandleCloseDialog(true));
+    
+}

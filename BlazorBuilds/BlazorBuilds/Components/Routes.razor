@@ -1,0 +1,38 @@
+﻿<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>
+
+@* 
+
+In interactiveAuto(Server and WebAssembly) per Page/Component there is no render mode attribute set on the router in the App.razor file.
+
+
+The updated modal dialog container component was originally designed some years before Auto render mode was invented, and was designed so a single
+instance of it could be placed on the Routes component with the Modal Dialog Service communicating with it.
+
+For this project type you could place two instances of the component here, one for WebAssembly and one Server and then not have to place the 
+ModalDialogContainer component on any page, other than for the Auto pages.
+
+<ModalDialogContainer @rendermode="InteractiveServer" />
+<ModalDialogContainer @rendermode="InteractiveWebAssembly" />
+
+
+I have not investigated the issue of having all three here, but needless to say one or more stope working if our try, something caused by Blazor, not the component.
+
+
+Whilst updating my component I added code so multiple instances could be used without a problem, hence you can have many pages of the same type such as Auto with the component on it,  
+but there is not point in putting the container component on pages if its not necessary to do so.
+
+
+For Interactive Global projects, Auto, Server or WebAssembly then all that is required is to place one instance of the container component in the Routes components and that it. 
+
+And as the rendor mode attribute will have been set on the Routes component in the App.razor file you do not need to specify it, so you can simple add:
+
+<ModalDialogContainer />
+
+*@
+
+
