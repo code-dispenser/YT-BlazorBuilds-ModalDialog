@@ -10,22 +10,7 @@ internal class GlobalValues
     public const string JavaScript_Open_Modal_Func            = "openModalDialog";
     public const string JavaScript_Close_Modal_Func           = "closeModalDialog";
 
-
-
     public const string DialogFramework_Class                 = "dialog-framework";
     public const string DialogFramework_Window_Class          = $"{DialogFramework_Class}__window";
-
-
-    public const string Style_As_Dark  = "dark";
-    public const string Style_As_Light = "light";
-
-    public static string? GetStyleAsValue(StyleAs styleAs)
-
-    => styleAs switch
-    {
-        StyleAs.OnLight => Style_As_Light,
-        StyleAs.OnDark => Style_As_Dark,
-        _ => null
-    };
 
 }
