@@ -38,13 +38,4 @@ public static class GeneralUtilities
                 ? throw new ArgumentException(GlobalValues.Argument_Null_Empty_Exception_Message, argumentName)
                     : argument;
 
-
-    public static async void AwaitTask(this Task @this, Action<Exception> exceptionHander)
-    {
-        try
-        {
-            await @this;
-        }
-        catch (Exception ex) { exceptionHander(ex); }
-    }
 }
