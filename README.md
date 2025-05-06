@@ -4,7 +4,9 @@
 
 This repository contains the solution from my YouTube video showing how to build an accessible Modal Dialog Framework for Blazor.
 
-YouTube video: https://youtu.be/orf66FuN-Ls
+YouTube video (Part 1 of 2): https://youtu.be/orf66FuN-Ls
+
+YouTube video (Part 2 of 2): https://youtu.be/O8jlKRb7GBs
 
 Coffees welcomed : https://ko-fi.com/codedispenser
 
